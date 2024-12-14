@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:helmet_license/HomeScreen/cameralive.dart';
 import 'package:helmet_license/HomeScreen/imageUploadScreen.dart';
 
@@ -14,21 +15,40 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Helmet & License Plate Detect Karo!'),
+        title: Text('\t\t\t\tHelmet & License Plate\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDetection',
+        style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.pollerOne().fontFamily,
+                          color: Color.fromARGB(255, 2, 26, 145),
+                        ),
+                ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height:20),
             Text(
-              'Welcome to the Detection App',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              '\t\t\tWelcome to the Detection App',
+               style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.habibi().fontFamily,
+                          color: Color.fromARGB(255, 63, 149, 6),
+                        ),
             ),
             SizedBox(height: 20),
             Text(
               'Key Features:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.habibi().fontFamily,
+                          color: Color.fromARGB(255, 253, 110, 0),
+                        ),
             ),
             SizedBox(height: 10),
             FeatureCard(
@@ -50,6 +70,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.notifications,
               iconSize: featureCardIconSize,
               title: 'Start Detection',
+              
               description: 'Receive alerts when violations are detected.',
               onTap: () async {
                 
@@ -206,12 +227,20 @@ class FeatureCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: screenWidth * 0.045,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: GoogleFonts.habibi().fontFamily,
+                      color: Color.fromARGB(255, 165, 52, 7),
+                      ),
                     ),
                     SizedBox(height: screenWidth * 0.02),
                     Text(
                       description,
-                      style: TextStyle(fontSize: screenWidth * 0.04),
+                      style: TextStyle(fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: GoogleFonts.habibi().fontFamily,
+                      color: Color.fromARGB(255, 7, 128, 165),
+                      ),
                     ),
                   ],
                 ),
