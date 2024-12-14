@@ -6,8 +6,6 @@ import 'package:helmet_license/HomeScreen/imageUploadScreen.dart';
 
 class HomeScreen extends StatelessWidget {
 
-
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -37,7 +35,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.camera_alt,
               iconSize: featureCardIconSize,
               title: 'Real-time Detection',
-              description: 'Monitor helmets and license plates in real-time.',
+              description: 'Tap to start detection and identify safety rule violations instantly.',
               onTap: () async {
                 
                       Navigator.push(
