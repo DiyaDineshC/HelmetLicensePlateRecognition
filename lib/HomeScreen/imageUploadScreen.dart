@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
@@ -73,8 +74,16 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Image and Detect'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('Upload Image and Detect',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.habibi().fontFamily,
+                          color: Color.fromARGB(255, 165, 52, 7),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+        backgroundColor: const Color.fromARGB(255, 242, 244, 246),
         elevation: 0,
       ),
       body: SingleChildScrollView( // Wrapping the body with SingleChildScrollView

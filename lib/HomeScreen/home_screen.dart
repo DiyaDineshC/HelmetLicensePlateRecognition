@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helmet_license/HomeScreen/cameralive.dart';
 import 'package:helmet_license/HomeScreen/imageUploadScreen.dart';
+import 'package:helmet_license/HomeScreen/violationHistory.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -21,6 +22,8 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontFamily: GoogleFonts.pollerOne().fontFamily,
                           color: Color.fromARGB(255, 2, 26, 145),
+                          
+                          
                         ),
                 ),
       ),
@@ -86,9 +89,15 @@ class HomeScreen extends StatelessWidget {
               iconSize: featureCardIconSize,
               title: 'Violation History',
               description: 'View history of detected violations.',
-              onTap: () {
-                // Navigate to history page
-              },
+              onTap: () async {
+                
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViolationHistoryScreen(),
+                        ),
+                      );
+              }
             ),
             FeatureCard(
               icon: Icons.map,

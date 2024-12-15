@@ -39,8 +39,11 @@ app.*.map.json
 
 # Android Studio will place build artifacts here
 /Backend/venv
+/Backend/uploads
 /android/app/debug
 /android/app/profile
 /android/app/release
 /android/app/google-services.json
 /Backend/serviceAccountKey.json
+/uploads
+/android/java_pid7680.hprof

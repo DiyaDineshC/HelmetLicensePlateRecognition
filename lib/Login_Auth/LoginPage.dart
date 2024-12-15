@@ -253,7 +253,7 @@ Widget build(BuildContext context) {
                   child: Column(
                     children: [
                       Text(
-                        'Sign Up',
+                        isLogin ? 'Welcome Back' : 'Create Account',
                         style: TextStyle(
                           fontSize: 40.0,
                           fontWeight: FontWeight.bold,
@@ -419,7 +419,13 @@ Widget build(BuildContext context) {
                         },
                         child: Text(
                           isLogin ? 'Don\'t have an account? Sign Up' : 'Already have an account? Login',
-                          style: TextStyle(color: Color(0xff3D2715)),
+                          style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                          
+                          color:  Color(0xff3D2715),
+                        ),
                         ),
                       ),
                     ],
