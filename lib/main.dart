@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:helmet_license/HomeScreen/home_screen.dart';
 import 'package:helmet_license/Login_Auth/LoginPage.dart';
 
 void main() async {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:LoginPage(),  // Your main app screen
+      home:HomeScreen(),  // Your main app screen
     );
   }
 }

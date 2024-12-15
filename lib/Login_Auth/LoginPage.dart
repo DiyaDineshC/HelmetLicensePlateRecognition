@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
   String _errorMessage = '';
-  String _successMessage = '';
+  // String _successMessage = '';
   bool isLogin = true;
 
   Future<void> signInWithEmailAndPassword() async {
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> createUserWithEmailAndPassword() async {
     setState(() {
       _errorMessage = '';
-      _successMessage = '';
+      // _successMessage = '';
     });
 
     if (_emailController.text.isEmpty ||
@@ -407,7 +407,7 @@ Widget build(BuildContext context) {
                           setState(() {
                             isLogin = !isLogin;
                             _errorMessage = '';
-                            _successMessage = '';
+                            // _successMessage = '';
                             _emailController.clear();
                             _passwordController.clear();
                             _confirmPasswordController.clear();

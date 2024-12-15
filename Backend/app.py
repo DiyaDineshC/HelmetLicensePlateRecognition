@@ -8,7 +8,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, storage
 
 # Initialize Flask
-app = Flask(__name__) 
+app = Flask(__name__)
 
 # Firebase Admin SDK setup (Initialize only once)
 if not firebase_admin._apps:
@@ -34,49 +34,14 @@ reader = easyocr.Reader(['en'])  # Specify language
 UPLOAD_FOLDER = 'uploads/'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@app.route('/camera_feed', methods=['GET'])
-def camera_feed():
-    cap = cv2.VideoCapture(0)  # 0 is the default camera
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+# Define colors for bounding boxes (BGR format)
+COLOR_HELMET = (0, 255, 0)         # Green for Helmet
+COLOR_NO_HELMET = (0, 0, 255)      # Red for No Helmet
+COLOR_LICENSE_PLATE = (255, 0, 0)  # Blue for License Plate
+COLOR_TEXT = (0,255,0)       # White for text
 
-    if not cap.isOpened():
-        return jsonify({'error': 'Camera not accessible'}), 500
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            return jsonify({'error': 'Failed to capture frame'}), 500
-
-        # Perform YOLO inference on the frame
-        results = model(frame)
-
-        # Process detections
-        detections = []
-        for result in results[0].boxes.data:
-            x1, y1, x2, y2 = map(int, result[:4])  # Bounding box coordinates
-            class_id = int(result[5])  # Class ID
-
-            label = 'Helmet' if class_id == 0 else ('License Plate' if class_id == 1 else 'No Helmet')
-            detections.append({
-                'rect': {'x': x1, 'y': y1, 'w': x2 - x1, 'h': y2 - y1},
-                'label': label
-            })
-
-            # Draw bounding boxes and labels on the frame
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(frame, label, (x1, y1 - 10 if y1 > 20 else y1 + 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-        # Convert the frame to JPEG format
-        _, jpeg = cv2.imencode('.jpg', frame)
-        frame_data = jpeg.tobytes()
-
-        # Return the frame as a response
-        return (frame_data, 200, {'Content-Type': 'image/jpeg'})
-
+# Route for video streaming with live YOLO detection
 @app.route('/video_feed')
-
 def video_feed():
     def generate_frames():
         cap = cv2.VideoCapture(0)  # Open camera feed
@@ -91,15 +56,27 @@ def video_feed():
             # Perform YOLO inference on the frame
             results = model(frame)
 
+            # Process detections
             for result in results[0].boxes.data:
                 x1, y1, x2, y2 = map(int, result[:4])  # Bounding box coordinates
                 class_id = int(result[5])  # Class ID
-                label = 'Helmet' if class_id == 0 else ('License Plate' if class_id == 1 else 'No Helmet')
-                
-                # Draw bounding boxes
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+                # Set color and label based on class ID
+                if class_id == 0:  # Helmet
+                    color = COLOR_HELMET
+                    label = 'Helmet'
+                elif class_id == 1:  # License Plate
+                    color = COLOR_LICENSE_PLATE
+                    label = 'License Plate'
+                else:  # No Helmet
+                    color = COLOR_NO_HELMET
+                    label = 'No Helmet'
+
+                # Draw bounding box
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                # Add text label
                 cv2.putText(frame, label, (x1, y1 - 10 if y1 > 20 else y1 + 20),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLOR_TEXT, 2)
 
             # Encode the frame as JPEG
             _, buffer = cv2.imencode('.jpg', frame)
@@ -110,7 +87,6 @@ def video_feed():
         cap.release()
 
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 
 # Helper function to upload images to Firebase Storage
@@ -148,57 +124,54 @@ def predict():
     if img is None:
         return jsonify({'error': 'Failed to read image'}), 400
 
-    # Resize the image for consistent processing
-    max_width = 800
-    height, width, _ = img.shape
-    if width > max_width:
-        aspect_ratio = height / width
-        new_width = max_width
-        new_height = int(aspect_ratio * new_width)
-        img = cv2.resize(img, (new_width, new_height))
-
     # Perform YOLO inference
     results = model(img)
 
     # Process detections
     detections = []
-    license_plates_seen = set()  # Set to track seen license plates
     for result in results[0].boxes.data:
         x1, y1, x2, y2 = map(int, result[:4])  # Bounding box coordinates
         class_id = int(result[5])  # Class ID
 
-        label = 'Helmet' if class_id == 0 else ('License Plate' if class_id == 1 else 'No Helmet')
+        # Set color and label based on class ID
+        if class_id == 0:  # Helmet
+            color = COLOR_HELMET
+            label = 'Helmet'
+        elif class_id == 1:  # License Plate
+            color = COLOR_LICENSE_PLATE
+            label = 'License Plate'
+        else:  # No Helmet
+            color = COLOR_NO_HELMET
+            label = 'No Helmet'
 
         # Process License Plate OCR
+        license_text = ""
         if class_id == 1:  # License Plate class
             license_plate_img = img[y1:y2, x1:x2]
             ocr_results = reader.readtext(license_plate_img)
-
-            license_text = ""
             if ocr_results:
-                for _, text, ocr_conf in ocr_results:
-                    if text not in license_plates_seen:  # Avoid duplicate OCR results
-                        license_text += f"{text} "
-                        license_plates_seen.add(text)
-                        print(f'OCR Result: {text}, Confidence: {ocr_conf:.2f}')
+                for _, text, _ in ocr_results:
+                    license_text += f"{text} "
 
             label += f": {license_text.strip()}"
 
-        # Draw bounding boxes and labels
-        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(img, label, (x1, y1 - 10 if y1 > 20 else y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        # Draw bounding box
+        cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+        # Add text label
+        cv2.putText(img, label, (x1, y1 - 10 if y1 > 20 else y1 + 20), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLOR_TEXT, 2)
 
         detections.append({
             'rect': {'x': x1, 'y': y1, 'w': x2 - x1, 'h': y2 - y1},
             'label': label,
-            'license_text': license_text.strip() if class_id == 1 else ""  # Add license text here
+            'license_text': license_text.strip() if class_id == 1 else ""
         })
 
-    # Save the output image with bounding boxes
+    # Save the output image
     output_path = os.path.join(UPLOAD_FOLDER, f"output_{filename}")
     cv2.imwrite(output_path, img)
 
-    # Upload the image to Firebase Storage
+    # Upload to Firebase
     image_url = upload_image_to_firebase(output_path)
 
     # Store bounding box data in Firestore
@@ -209,6 +182,7 @@ def predict():
         'detections': detections
     })
 
+
 # Start Flask app
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True)
