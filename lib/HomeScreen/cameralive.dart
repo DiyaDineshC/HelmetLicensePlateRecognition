@@ -51,7 +51,7 @@ class _CameraLiveState extends State<CameraLive> {
   Future<void> loadYoloModel() async {
     await vision.loadYoloModel(
       labels: 'assets/classes.txt',
-      modelPath: 'assets/best_float32.tflite',
+      modelPath: 'assets/best_float16.tflite', //Changed to 16 instead of 32
       modelVersion: "yolov8",
       numThreads: 4,
       useGpu: true,
