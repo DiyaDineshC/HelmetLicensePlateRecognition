@@ -24,7 +24,7 @@ db = firestore.client()
 bucket = storage.bucket()
 
 # Load YOLO model
-model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_float32.tflite')
+model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_float16.tflite')
 model = YOLO(model_path, task="detect")
 
 # Initialize EasyOCR Reader
