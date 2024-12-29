@@ -13,7 +13,7 @@ class _LiveDetectionScreenState extends State<LiveDetectionScreen> {
   late CameraController _controller;
   late List<CameraDescription> cameras;
   bool isDetecting = false;
-  final String flaskUrl = 'http://192.168.1.5:5000/video_feed'; // Replace with Flask server IP
+  final String flaskUrl = 'http://192.168.1.6:5000/video_feed'; // Replace with Flask server IP
 
   @override
   void initState() {

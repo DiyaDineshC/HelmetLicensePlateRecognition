@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helmet_license/HomeScreen/cameralive.dart';
 import 'package:helmet_license/HomeScreen/imageUploadScreen.dart';
-import 'package:helmet_license/HomeScreen/violationHistory.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -53,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                           color: Color.fromARGB(255, 253, 110, 0),
                         ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 50),
             FeatureCard(
               icon: Icons.camera_alt,
               iconSize: featureCardIconSize,
@@ -67,14 +66,16 @@ class HomeScreen extends StatelessWidget {
                           builder: (context) => CameraLive(),
                         ),
                       );
-              } 
+              },cardColor: const Color.fromARGB(255, 210, 249, 183)
             ),
+
+            SizedBox(height: 40),
             FeatureCard(
               icon: Icons.notifications,
               iconSize: featureCardIconSize,
-              title: 'Start Detection',
+              title: 'Upload Image and Detect',
               
-              description: 'Receive alerts when violations are detected.',
+              description: 'Upload images to detect helmet and license plate violations, ensuring safety and compliance.',
               onTap: () async {
                 
                       Navigator.push(
@@ -83,48 +84,34 @@ class HomeScreen extends StatelessWidget {
                           builder: (context) => ImageUploadScreen(),
                         ),
                       );
-              } ) , 
-            FeatureCard(
-              icon: Icons.history,
-              iconSize: featureCardIconSize,
-              title: 'Violation History',
-              description: 'View history of detected violations.',
-              onTap: () async {
+              },cardColor: const Color.fromARGB(255, 210, 249, 183), // Set custom color here 
+              ) , 
+            // FeatureCard(
+            //   icon: Icons.history,
+            //   iconSize: featureCardIconSize,
+            //   title: 'Violation History',
+            //   description: 'View history of detected violations.',
+            //   onTap: () async {
                 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViolationHistoryScreen(),
-                        ),
-                      );
-              }
-            ),
-            FeatureCard(
-              icon: Icons.map,
-              iconSize: featureCardIconSize,
-              title: 'Geolocation Tracking',
-              description: 'Track locations of detected violations.',
-              onTap: () {
-                // Navigate to map page
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => ViolationHistoryScreen(),
+            //             ),
+            //           );
+            //   }
+            // ),
+            // FeatureCard(
+            //   icon: Icons.map,
+            //   iconSize: featureCardIconSize,
+            //   title: 'Geolocation Tracking',
+            //   description: 'Track locations of detected violations.',
+            //   onTap: () {
+            //     // Navigate to map page
                 
-              },
-            ),
-            FeatureCard(
-              icon: Icons.analytics,
-              iconSize: featureCardIconSize,
-              title: 'Reporting & Analytics',
-              description: 'Generate reports and analyze data.',
-              onTap: () {
-                // Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => DetectionList(),
-                //         ),
-                //       );
-                
-
-              },
-            ),
+            //   },
+            // ),
+            
             SizedBox(height: 20),
             // ElevatedButton(
             //   onPressed: () {
@@ -194,13 +181,13 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-
 class FeatureCard extends StatelessWidget {
   final IconData icon;
   final double iconSize;
   final String title;
   final String description;
   final VoidCallback onTap;
+  final Color cardColor;  // Added parameter for custom card color
 
   const FeatureCard({
     Key? key,
@@ -209,6 +196,7 @@ class FeatureCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onTap,
+    this.cardColor = Colors.white,  // Default color is white
   }) : super(key: key);
 
   @override
@@ -220,6 +208,7 @@ class FeatureCard extends StatelessWidget {
       child: Card(
         elevation: 4,
         margin: EdgeInsets.symmetric(vertical: 8),
+        color: cardColor,  // Set the card's background color here
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -236,19 +225,21 @@ class FeatureCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontSize: screenWidth * 0.045,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: GoogleFonts.habibi().fontFamily,
-                      color: Color.fromARGB(255, 165, 52, 7),
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.habibi().fontFamily,
+                        color: Color.fromARGB(255, 165, 52, 7),
                       ),
                     ),
                     SizedBox(height: screenWidth * 0.02),
                     Text(
                       description,
-                      style: TextStyle(fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: GoogleFonts.habibi().fontFamily,
-                      color: Color.fromARGB(255, 7, 128, 165),
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.habibi().fontFamily,
+                        color: Color.fromARGB(255, 7, 128, 165),
                       ),
                     ),
                   ],

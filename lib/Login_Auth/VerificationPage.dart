@@ -45,7 +45,9 @@ class _VerificationPageState extends State<VerificationPage> {
         title: Text('Verify Email'),
       ),
       body: Center(
+        
         child: CircularProgressIndicator(),
+        
       ),
     );
   }
