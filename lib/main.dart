@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:helmet_license/HomeScreen/home_screen.dart';
-<<<<<<< HEAD
-=======
-import 'package:helmet_license/Login_Auth/LoginPage.dart';
->>>>>>> 24b51b4e47e7ee6150fe88d4b832ec007bbdeebc
+import 'package:helmet_license/Login_Auth/animation.dart';
+// import 'package:helmet_license/HomeScreen/home_screen.dart';
+// import 'package:helmet_license/Login_Auth/LoginPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Ensures the app is initialized
@@ -27,11 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
       theme: ThemeData(primarySwatch: Colors.blue),
-<<<<<<< HEAD
-      home:HomeScreen(),  
-=======
-      home:HomeScreen(),  // Your main app screen
->>>>>>> 24b51b4e47e7ee6150fe88d4b832ec007bbdeebc
+      home:AnimationWidget(),  // Your main app screen
     );
   }
 }
