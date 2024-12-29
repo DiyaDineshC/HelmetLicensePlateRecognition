@@ -39,6 +39,7 @@ COLOR_HELMET = (0, 255, 0)         # Green for Helmet
 COLOR_NO_HELMET = (0, 0, 255)      # Red for No Helmet
 COLOR_LICENSE_PLATE = (255, 0, 0)  # Blue for License Plate
 COLOR_TEXT = (0,255,0)       # White for text
+<<<<<<< HEAD
 
 
 # Route for processing video input with YOLO detection
@@ -131,6 +132,46 @@ def process_video():
         out.write(frame)
 
     out.release()
+=======
+
+# Route for video streaming with live YOLO detection
+@app.route('/video_feed')
+def video_feed():
+    def generate_frames():
+        cap = cv2.VideoCapture(0)  # Open camera feed
+        if not cap.isOpened():
+            return jsonify({'error': 'Camera not accessible'}), 500
+        
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            # Perform YOLO inference on the frame
+            results = model(frame)
+
+            # Process detections
+            for result in results[0].boxes.data:
+                x1, y1, x2, y2 = map(int, result[:4])  # Bounding box coordinates
+                class_id = int(result[5])  # Class ID
+
+                # Set color and label based on class ID
+                if class_id == 0:  # Helmet
+                    color = COLOR_HELMET
+                    label = 'Helmet'
+                elif class_id == 1:  # License Plate
+                    color = COLOR_LICENSE_PLATE
+                    label = 'License Plate'
+                else:  # No Helmet
+                    color = COLOR_NO_HELMET
+                    label = 'No Helmet'
+
+                # Draw bounding box
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                # Add text label
+                cv2.putText(frame, label, (x1, y1 - 10 if y1 > 20 else y1 + 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLOR_TEXT, 2)
+>>>>>>> 24b51b4e47e7ee6150fe88d4b832ec007bbdeebc
 
     # Upload the processed video to Firebase
     video_url = upload_image_to_firebase(output_video_path)
@@ -144,6 +185,7 @@ def process_video():
     })
 
 
+<<<<<<< HEAD
 # Helper function to store video detections in a separate Firestore collection
 def store_video_detections_in_firebase(video_name, detections, video_url):
     try:
@@ -159,6 +201,8 @@ def store_video_detections_in_firebase(video_name, detections, video_url):
         print(f'Error storing video detection data: {e}')
 
 
+=======
+>>>>>>> 24b51b4e47e7ee6150fe88d4b832ec007bbdeebc
 # Helper function to upload images to Firebase Storage
 def upload_image_to_firebase(img_path):
     blob = bucket.blob(os.path.basename(img_path))
@@ -255,4 +299,8 @@ def predict():
 
 # Start Flask app
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host='0.0.0.0', port=5000, debug=True)
+=======
+    app.run(host='0.0.0.0', port=5000, debug=True)
+>>>>>>> 24b51b4e47e7ee6150fe88d4b832ec007bbdeebc
