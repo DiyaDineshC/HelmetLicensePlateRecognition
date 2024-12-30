@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_vision/flutter_vision.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+Future<void> saveResultsToFirebase(List<Map<String, dynamic>> results) async {
+  try {
+    final firestore = FirebaseFirestore.instance;
+    final detectionsCollection = firestore.collection('detections');
+
+    final data = {
+      'timestamp': FieldValue.serverTimestamp(),
+      'results': results, // Store the detection results
+    };
+
+    await detectionsCollection.add(data);
+
+    print("Results saved to Firebase successfully!");
+  } catch (e) {
+    print("Error saving results to Firebase: $e");
+  }
+}
+
+
 
 
 class CameraLive extends StatefulWidget {
@@ -14,6 +36,7 @@ class _CameraLiveState extends State<CameraLive> {
   late CameraController controller;
   late FlutterVision vision;
   List<Map<String, dynamic>> yoloResults = [];
+  List<dynamic> previousResult = [];
 
   CameraImage? cameraImage;
   bool isLoaded = false;
@@ -71,7 +94,10 @@ class _CameraLiveState extends State<CameraLive> {
     if (result.isNotEmpty) {
       setState(() {
         yoloResults = result;
+        previousResult = result;
       });
+      print(result);
+      await saveResultsToFirebase(result);
     }
   }
 
@@ -148,7 +174,7 @@ class _CameraLiveState extends State<CameraLive> {
     final Size size = MediaQuery.of(context).size;
 
     if (!isLoaded) {
-      return const Scaffold(   
+      return const Scaffold(
         body: Center(child: Text("Model not loaded, waiting for it")),
       );
     }

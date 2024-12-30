@@ -38,7 +38,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
 
     try {
       // Send image to Flask server for processing
-      var uri = Uri.parse("http://192.168.1.6:5000/predict");
+      var uri = Uri.parse("http://192.168.31.201:8080/predict");
 
       var request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
