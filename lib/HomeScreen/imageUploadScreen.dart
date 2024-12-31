@@ -38,7 +38,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
 
     try {
       // Send image to Flask server for processing
-      var uri = Uri.parse("http://192.168.1.6:5000/predict");
+      var uri = Uri.parse("http://192.168.216.92:5000/predict");
 
       var request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
@@ -55,7 +55,11 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
           _detections = data['detections'];
         });
 
+        print('Grayscale Image: ${data['gray_image_url']}');
+
         // Display the detected image (optional: if you want to display the output image)
+
+
         print('ImageURL: $_imageUrl');
         print('Detections: $_detections');
       } else {
@@ -74,11 +78,11 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Image and Detect',
+        title: Text('Upload and Detect',
                         style: TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.habibi().fontFamily,
+                          fontFamily: GoogleFonts.poppins().fontFamily,
                           color: Color.fromARGB(255, 165, 52, 7),
                         ),
                         textAlign: TextAlign.center,
@@ -117,7 +121,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                   label: Text('Pick Image',style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: GoogleFonts.habibi().fontFamily,
+                                          fontFamily: GoogleFonts.poppins().fontFamily,
                                           color: Color.fromARGB(255, 20, 1, 79),
                                         ),),
                   style: ElevatedButton.styleFrom(
@@ -125,7 +129,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                     backgroundColor: const Color.fromARGB(255, 44, 237, 144),
                     textStyle: TextStyle(
                       fontSize: 18,
-                      fontFamily: GoogleFonts.habibi().fontFamily,  
+                      fontFamily: GoogleFonts.poppins().fontFamily,  
                       color: const Color.fromARGB(255, 201, 10, 10), 
                     ),
                     shape: RoundedRectangleBorder(
@@ -141,7 +145,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                   label: Text('Upload Image',style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: GoogleFonts.habibi().fontFamily,
+                                          fontFamily: GoogleFonts.poppins().fontFamily,
                                           color: Color.fromARGB(255, 20, 1, 79),
                                         ),),
                   style: ElevatedButton.styleFrom(
@@ -149,7 +153,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                     backgroundColor: const Color.fromARGB(255, 255, 207, 15),
                     textStyle: TextStyle(
                       fontSize: 18,
-                      fontFamily: GoogleFonts.habibi().fontFamily,  
+                      fontFamily: GoogleFonts.poppins().fontFamily,  
                       color: const Color.fromARGB(255, 201, 10, 10), 
                     ),
                     shape: RoundedRectangleBorder(
@@ -188,10 +192,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 8),
-                                  Text(
-                                    'Rect: x: ${detection['rect']['x']}, y: ${detection['rect']['y']}, w: ${detection['rect']['w']}, h: ${detection['rect']['h']}',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
+                                  
                                 ],
                               ),
                             ),

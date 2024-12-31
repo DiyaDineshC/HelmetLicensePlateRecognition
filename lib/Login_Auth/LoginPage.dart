@@ -257,7 +257,7 @@ Widget build(BuildContext context) {
                         style: TextStyle(
                           fontSize: 40.0,
                           fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.laBelleAurore().fontFamily,
+                          fontFamily: GoogleFonts.poppins ().fontFamily,
                           color: Color.fromARGB(255, 20, 1, 79),
                         ),
                       ),
@@ -392,7 +392,7 @@ Widget build(BuildContext context) {
                         child: Text(isLogin ? 'Login' : 'Sign Up',style: TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.vesperLibre().fontFamily,
+                          fontFamily: GoogleFonts.poppins().fontFamily,
                           color: Color.fromARGB(255, 16, 16, 17),
                         ),),
                         style: ElevatedButton.styleFrom(

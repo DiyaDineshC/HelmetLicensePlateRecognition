@@ -1,182 +1,169 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:helmet_license/HomeScreen/cameralive.dart';
 import 'package:helmet_license/HomeScreen/imageUploadScreen.dart';
 
-
 class HomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double horizontalPadding = screenWidth * 0.05;
-    double featureCardIconSize = screenWidth * 0.1;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Dynamic paddings and sizes
+    double horizontalPadding = screenWidth * 0.05; // 5% of screen width
+    double verticalPadding = screenHeight * 0.02; // 2% of screen height
+    double featureCardIconSize = screenWidth * 0.1; // 10% of screen width
+    double titleFontSize = screenWidth * 0.05; // Title font size based on screen width
+    double descriptionFontSize = screenWidth * 0.035; // Description font size
+
+    final List<String> roadSafetyTips = [
+      "Use your phone’s camera to instantly detect helmet and license plate violations.",
+      "Upload images to analyze helmet compliance and license plate visibility. Results stored securely in the cloud.",
+      "Simplify violation detection and evidence storage for seamless traffic law enforcement.",
+      "Empower users to promote helmet usage and compliance with road safety rules.",
+      "All detections are securely saved in Firebase, ensuring you never lose crucial data.",
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('\t\t\t\tHelmet & License Plate\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDetection',
-        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.pollerOne().fontFamily,
-                          color: Color.fromARGB(255, 2, 26, 145),
-                          
-                          
-                        ),
-                ),
+        title: Text(
+          '\t\t\t\t\t\t\t\t\t\tHelmet & License Plate\n\t\t\t\t\t\t\t\t\t\tDetection',
+          style: TextStyle(
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: GoogleFonts.poppins().fontFamily,
+            color: Color.fromARGB(255, 2, 26, 145),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Color.fromARGB(255, 160, 222, 78),
+        elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
-        
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height:20),
-            Text(
-              '\t\t\tWelcome to the Detection App',
-               style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.habibi().fontFamily,
-                          color: Color.fromARGB(255, 63, 149, 6),
-                        ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Key Features:',
-              style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.habibi().fontFamily,
-                          color: Color.fromARGB(255, 253, 110, 0),
-                        ),
-            ),
-            SizedBox(height: 50),
-            FeatureCard(
-              icon: Icons.camera_alt,
-              iconSize: featureCardIconSize,
-              title: 'Real-time Detection',
-              description: 'Tap to start detection and identify safety rule violations instantly.',
-              onTap: () async {
-                
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CameraLive(),
-                        ),
-                      );
-              },cardColor: const Color.fromARGB(255, 210, 249, 183)
-            ),
+      body: Container(
+        width: double.infinity, // Full width
+        height: double.infinity, // Full height
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 183, 238, 113),
+              Color.fromARGB(255, 209, 107, 107),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: screenHeight * 0.02),
 
-            SizedBox(height: 40),
-            FeatureCard(
-              icon: Icons.notifications,
-              iconSize: featureCardIconSize,
-              title: 'Upload Image and Detect',
-              
-              description: 'Upload images to detect helmet and license plate violations, ensuring safety and compliance.',
-              onTap: () async {
-                
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ImageUploadScreen(),
+              // Carousel Slider for Road Safety Tips
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: screenHeight * 0.2,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.8,
+                  aspectRatio: 16 / 9,
+                  initialPage: 0,
+                ),
+                items: roadSafetyTips.map((tip) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        width: screenWidth * 0.85,
+                        margin: EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 255, 226, 226),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 5.0,
+                              spreadRadius: 2.0,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              tip,
+                              style: TextStyle(
+                                fontSize: descriptionFontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 2, 26, 145),
+                                fontFamily: GoogleFonts.roboto().fontFamily,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       );
-              },cardColor: const Color.fromARGB(255, 210, 249, 183), // Set custom color here 
-              ) , 
-            // FeatureCard(
-            //   icon: Icons.history,
-            //   iconSize: featureCardIconSize,
-            //   title: 'Violation History',
-            //   description: 'View history of detected violations.',
-            //   onTap: () async {
-                
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) => ViolationHistoryScreen(),
-            //             ),
-            //           );
-            //   }
-            // ),
-            // FeatureCard(
-            //   icon: Icons.map,
-            //   iconSize: featureCardIconSize,
-            //   title: 'Geolocation Tracking',
-            //   description: 'Track locations of detected violations.',
-            //   onTap: () {
-            //     // Navigate to map page
-                
-            //   },
-            // ),
-            
-            SizedBox(height: 20),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Add logic to start detection
-            //   },
-            //   child: Text('Start Detection'),
-            //   style: ElevatedButton.styleFrom(
-            //     padding: EdgeInsets.symmetric(vertical: 16),
-            //     textStyle: TextStyle(fontSize: screenWidth * 0.045),
-            //   ),
-            // ),
-          ],
+                    },
+                  );
+                }).toList(),
+              ),
+
+              SizedBox(height: screenHeight * 0.05), // Spacing
+
+              Text(
+                'Key Features:',
+                style: TextStyle(
+                  fontSize: titleFontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.05), // Space before cards
+
+              FeatureCard(
+                icon: Icons.camera_alt,
+                iconSize: featureCardIconSize,
+                title: 'Real-time Detection',
+                description: 'Tap to start detection and identify safety rule violations instantly.',
+                titleFontSize: titleFontSize,
+                descriptionFontSize: descriptionFontSize,
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraLive(),
+                    ),
+                  );
+                },
+                cardColor: Color.fromARGB(255, 210, 249, 183),
+              ),
+
+              SizedBox(height: screenHeight * 0.04), // Spacing between cards
+
+              FeatureCard(
+                icon: Icons.notifications,
+                iconSize: featureCardIconSize,
+                title: 'Upload Image and Detect',
+                description: 'Upload images to detect helmet and license plate violations, ensuring safety and compliance.',
+                titleFontSize: titleFontSize,
+                descriptionFontSize: descriptionFontSize,
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImageUploadScreen(),
+                    ),
+                  );
+                },
+                cardColor: Color.fromARGB(255, 210, 249, 183),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class CameraScreen extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  final String modelPath;
-  final Function(List<dynamic> recognitions, int height, int width) onRecognitions;
-
-  const CameraScreen({
-    Key? key,
-    required this.cameras,
-    required this.modelPath,
-    required this.onRecognitions,
-  }) : super(key: key);
-
-  @override
-  State<CameraScreen> createState() => _CameraScreenState();
-}
-
-class _CameraScreenState extends State<CameraScreen> {
-  late CameraController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeCamera();
-  }
-
-  Future<void> _initializeCamera() async {
-    _controller = CameraController(widget.cameras.first, ResolutionPreset.high);
-    await _controller.initialize();
-    setState(() {});
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return Center(child: CircularProgressIndicator());
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Real-time Detection"),
-      ),
-      body: CameraPreview(_controller),
     );
   }
 }
@@ -186,29 +173,33 @@ class FeatureCard extends StatelessWidget {
   final double iconSize;
   final String title;
   final String description;
+  final double titleFontSize;
+  final double descriptionFontSize;
   final VoidCallback onTap;
-  final Color cardColor;  // Added parameter for custom card color
+  final Color cardColor;
 
-  const FeatureCard({
-    Key? key,
+  FeatureCard({
     required this.icon,
     required this.iconSize,
     required this.title,
     required this.description,
+    required this.titleFontSize,
+    required this.descriptionFontSize,
     required this.onTap,
-    this.cardColor = Colors.white,  // Default color is white
-  }) : super(key: key);
+    required this.cardColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 4,
-        margin: EdgeInsets.symmetric(vertical: 8),
-        color: cardColor,  // Set the card's background color here
+    return Card(
+      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 10.0,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -216,9 +207,9 @@ class FeatureCard extends StatelessWidget {
               Icon(
                 icon,
                 size: iconSize,
-                color: Colors.blue,
+                color: Color.fromARGB(255, 2, 26, 145),
               ),
-              SizedBox(width: screenWidth * 0.04),
+              SizedBox(width: 20),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,20 +217,17 @@ class FeatureCard extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: screenWidth * 0.045,
+                        fontSize: titleFontSize,
                         fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.habibi().fontFamily,
-                        color: Color.fromARGB(255, 165, 52, 7),
+                        color: Color.fromARGB(255, 2, 26, 145),
                       ),
                     ),
-                    SizedBox(height: screenWidth * 0.02),
+                    SizedBox(height: 10),
                     Text(
                       description,
                       style: TextStyle(
-                        fontSize: screenWidth * 0.04,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.habibi().fontFamily,
-                        color: Color.fromARGB(255, 7, 128, 165),
+                        fontSize: descriptionFontSize,
+                        color: Colors.black87,
                       ),
                     ),
                   ],

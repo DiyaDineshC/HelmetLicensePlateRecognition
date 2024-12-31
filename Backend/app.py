@@ -47,12 +47,12 @@ def video_feed():
         cap = cv2.VideoCapture(0)  # Open camera feed
         if not cap.isOpened():
             return jsonify({'error': 'Camera not accessible'}), 500
-        
+
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
-            
+
             # Perform YOLO inference on the frame
             results = model(frame)
 
@@ -88,7 +88,6 @@ def video_feed():
 
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
 # Helper function to upload images to Firebase Storage
 def upload_image_to_firebase(img_path):
     blob = bucket.blob(os.path.basename(img_path))
@@ -108,7 +107,6 @@ def store_bounding_box_data_in_firebase(detections, image_url):
     except Exception as e:
         print(f'Error storing bounding box data: {e}')
 
-
 # Modify the predict route to include OCR results for license plates
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -120,12 +118,28 @@ def predict():
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)  # Save the uploaded image
 
-    img = cv2.imread(file_path)
-    if img is None:
+    # Read the original image (color)
+    original_img = cv2.imread(file_path)
+    if original_img is None:
         return jsonify({'error': 'Failed to read image'}), 400
 
-    # Perform YOLO inference
-    results = model(img)
+    # Convert to grayscale for processing
+    gray_img = cv2.cvtColor(original_img, cv2.COLOR_BGR2GRAY)
+    hist_equalized_img = cv2.equalizeHist(gray_img)  # Enhance contrast
+
+    # Save the grayscale and histogram-equalized images for verification
+    gray_img_path = os.path.join(UPLOAD_FOLDER, f"gray_{filename}")
+    hist_img_path = os.path.join(UPLOAD_FOLDER, f"hist_{filename}")
+
+    cv2.imwrite(gray_img_path, gray_img)  # Save grayscale image
+    cv2.imwrite(hist_img_path, hist_equalized_img)  # Save histogram-equalized image
+
+    # You can log or return these paths for debugging
+    print(f"Grayscale image saved at: {gray_img_path}")
+    print(f"Histogram-equalized image saved at: {hist_img_path}")
+
+    # Use the grayscale image for YOLO inference
+    results = model(cv2.cvtColor(hist_equalized_img, cv2.COLOR_GRAY2BGR))  # YOLO requires 3 channels
 
     # Process detections
     detections = []
@@ -144,10 +158,10 @@ def predict():
             color = COLOR_NO_HELMET
             label = 'No Helmet'
 
-        # Process License Plate OCR
+        # If it's a license plate, perform OCR
         license_text = ""
         if class_id == 1:  # License Plate class
-            license_plate_img = img[y1:y2, x1:x2]
+            license_plate_img = hist_equalized_img[y1:y2, x1:x2]  # Crop from the grayscale image
             ocr_results = reader.readtext(license_plate_img)
             if ocr_results:
                 for _, text, _ in ocr_results:
@@ -155,11 +169,18 @@ def predict():
 
             label += f": {license_text.strip()}"
 
-        # Draw bounding box
-        cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
-        # Add text label
-        cv2.putText(img, label, (x1, y1 - 10 if y1 > 20 else y1 + 20), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLOR_TEXT, 2)
+        # Draw bounding boxes and labels on the original image
+        cv2.rectangle(original_img, (x1, y1), (x2, y2), color, 2)
+        # Adjust font scale and thickness
+        font_scale = 0.9  # Smaller text size
+        font_thickness = 3  # Normal thickness
+
+        cv2.putText(original_img, label, 
+                    (x1, y1 - 10 if y1 > 20 else y1 + 20), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 
+                    font_scale, 
+                    COLOR_TEXT, 
+                    font_thickness)
 
         detections.append({
             'rect': {'x': x1, 'y': y1, 'w': x2 - x1, 'h': y2 - y1},
@@ -167,9 +188,9 @@ def predict():
             'license_text': license_text.strip() if class_id == 1 else ""
         })
 
-    # Save the output image
+    # Save the output image with bounding boxes drawn on the original image
     output_path = os.path.join(UPLOAD_FOLDER, f"output_{filename}")
-    cv2.imwrite(output_path, img)
+    cv2.imwrite(output_path, original_img)
 
     # Upload to Firebase
     image_url = upload_image_to_firebase(output_path)
@@ -182,7 +203,7 @@ def predict():
         'detections': detections
     })
 
-
 # Start Flask app
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+
