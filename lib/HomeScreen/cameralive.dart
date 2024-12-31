@@ -1,7 +1,6 @@
 //
 
-import 'dart:math';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -12,9 +11,6 @@ import 'dart:io';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
-
-import 'package:permission_handler/permission_handler.dart';
 
 Future<void> saveResultsToFirebase(List<Map<String, dynamic>> results) async {
   try {
@@ -23,7 +19,7 @@ Future<void> saveResultsToFirebase(List<Map<String, dynamic>> results) async {
 
     final data = {
       'timestamp': FieldValue.serverTimestamp(),
-      'results': results, // Store the detection results
+      'results': results, // Store all detection results (helmet, no helmet, license plate)
     };
 
     await detectionsCollection.add(data);
@@ -33,7 +29,6 @@ Future<void> saveResultsToFirebase(List<Map<String, dynamic>> results) async {
     print("Error saving results to Firebase: $e");
   }
 }
-
 class CameraLive extends StatefulWidget {
   const CameraLive({Key? key}) : super(key: key);
 
@@ -102,18 +97,21 @@ class _CameraLiveState extends State<CameraLive> {
       confThreshold: 0.4,
       classThreshold: 0.5,
     );
+
     if (result.isNotEmpty) {
       setState(() {
         yoloResults = result;
       });
+
+      await saveResultsToFirebase(result); // Save all detection results
+
       for (var detection in result) {
         if (detection['tag'] == 'license plate') {
           await captureAndProcessRegion();
           setState(() {
             isLicensePlateDetected = true;
           });
-          await saveResultsToFirebase(result);
-          break;
+          break; // Exit the loop after processing a license plate
         }
       }
     }
