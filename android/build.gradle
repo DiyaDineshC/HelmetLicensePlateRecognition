@@ -1,17 +1,18 @@
 buildscript {
     ext {
-        kotlin_version = '1.9.10' // Make sure this is the correct version
+        kotlin_version = '1.9.10' // Ensure this is correct and in sync with your app
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:8.7.3' // Update to the latest AGP version
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
-        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.gms:google-services:4.4.2'
     }
 }
+
 
 allprojects {
     repositories {
@@ -19,17 +20,26 @@ allprojects {
         mavenCentral()
     }
 }
-
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+}
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
-subprojects {
-    project.evaluationDependsOn(':app')
-}
 
+// Make sure no 'namespace' related configurations are present here.
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
- 
+
+
