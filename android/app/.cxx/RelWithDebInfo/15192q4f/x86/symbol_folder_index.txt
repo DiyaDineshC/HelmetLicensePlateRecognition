@@ -1,0 +1,1 @@
+C:\Users\Ashton Internship\Desktop\Helmet_and_License_Plate_Recognition\HelmetLicensePlateRecognition\build\app\intermediates\cxx\RelWithDebInfo\15192q4f\obj\x86

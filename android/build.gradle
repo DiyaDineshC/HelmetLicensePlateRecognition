@@ -46,16 +46,16 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.9.10' // Ensure this is correct and in sync with your app
+        kotlin_version = '2.0.0' // Ensure this is correct and in sync with your app
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.3.0' // Update to the latest AGP version
+        classpath 'com.android.tools.build:gradle:8.7.3' // Update to the latest AGP version
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
-        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.gms:google-services:4.4.2'
     }
 }
 
@@ -63,6 +63,17 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+}
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
     }
 }
 

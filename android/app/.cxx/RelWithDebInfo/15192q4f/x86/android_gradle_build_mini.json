@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Ashton Internship\\Desktop\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Ashton Internship\\Desktop\\Helmet_and_License_Plate_Recognition\\HelmetLicensePlateRecognition\\android\\app\\.cxx\\RelWithDebInfo\\15192q4f\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Ashton Internship\\Desktop\\Helmet_and_License_Plate_Recognition\\HelmetLicensePlateRecognition\\android\\app\\.cxx\\RelWithDebInfo\\15192q4f\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
