@@ -60,7 +60,7 @@ class _CameraLiveState extends State<CameraLive> {
 
   init() async {
     final cameras = await availableCameras();
-    controller = CameraController(cameras[0], ResolutionPreset.high);
+    controller = CameraController(cameras[0], ResolutionPreset.low);
     await controller.initialize();
     vision = FlutterVision();
     await loadYoloModel();

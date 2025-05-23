@@ -1,0 +1,1 @@
+C:\Users\Ashton Internship\Desktop\Helmet_and_License_Plate_Recognition\HelmetLicensePlateRecognition\build\app\intermediates\cxx\Debug\2ie4o1kq\obj\armeabi-v7a

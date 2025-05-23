@@ -1,0 +1,2 @@
+C:/Users/Ashton Internship/Desktop/Helmet_and_License_Plate_Recognition/HelmetLicensePlateRecognition/android/app/.cxx/Debug/2ie4o1kq/x86/CMakeFiles/edit_cache.dir
+C:/Users/Ashton Internship/Desktop/Helmet_and_License_Plate_Recognition/HelmetLicensePlateRecognition/android/app/.cxx/Debug/2ie4o1kq/x86/CMakeFiles/rebuild_cache.dir

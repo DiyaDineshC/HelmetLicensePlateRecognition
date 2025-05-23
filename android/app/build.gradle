@@ -29,7 +29,7 @@ android {
         buildConfig true
     }
     namespace "com.example.helmet_license"
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     
 
@@ -38,7 +38,7 @@ android {
     defaultConfig {
         applicationId "com.example.helmet_license"
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
